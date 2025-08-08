@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(MakedownViewer VERSION 0.1 LANGUAGES CXX)
+project(MakedownViewer VERSION 0.0.1 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -91,3 +91,21 @@ install(TARGETS MakedownViewer
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+
+# cpack stuff
+include(InstallRequiredSystemLibraries)
+
+set (CPACK_PACKAGE_NAME "${PROJECT_NAME}")
+set (CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_NAME} - Markdown viewer")
+set (CPACK_PACKAGE_VENDOR "David Netherwood")
+set (CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
+set (CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
+set (CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
+set (CPACK_PACKAGE_CONTACT "david_netherwood@hotmail.com")
+set (CPACK_CREATE_DESKTOP_LINKS ${PROJECT_NAME})
+set (CPACK_GENERATOR "DEB")
+set (CPACK_DEBIAN_PACKAGE_DEPENDS "libqt6gui6, libqt6core6, libqt6widgets6, qt6-qpa-plugins")
+set (CPACK_PACKAGE_FILE_NAME ${PROJECT_NAME})
+
+include(CPack)
