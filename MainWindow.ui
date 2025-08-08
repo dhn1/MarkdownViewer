@@ -33,7 +33,7 @@
     <item>
      <widget class="QTextBrowser" name="textBrowser">
       <property name="placeholderText">
-       <string>Load markdown files using the File menu.</string>
+       <string>Load markdown files using the File menu</string>
       </property>
      </widget>
     </item>
