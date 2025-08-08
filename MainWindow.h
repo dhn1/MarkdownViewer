@@ -17,7 +17,13 @@ public:
     MainWindow (QWidget* parent = nullptr);
     ~MainWindow ();
 
+    void updateRecentFiles (const QString& path);
+
 private:
     Ui::MainWindow* ui;
+    QString m_file;
+    QStringList m_recentFiles;
+    void load (const QString& path, bool loadingRecent);
+    void updateRecentFiles ();
 };
 #endif  // MAINWINDOW_H

@@ -12,51 +12,78 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
+
+find_program(CCACHE_FOUND ccache)
+if(CCACHE_FOUND)
+    message (STATUS "Using ccache")
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+endif(CCACHE_FOUND)
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    option(ENABLE_SANITIZER "Enable sanitizer" ON)
+else()
+    option(ENABLE_SANITIZER "Enable sanitizer" OFF)
+endif()
+if (ENABLE_SANITIZER AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message (STATUS "Adress sanitizer enabled")
+    add_compile_options(-fsanitize=address -fsanitize=leak -fno-omit-frame-pointer)
+    add_link_options(-fsanitize=address -fsanitize=leak -lresolv)
+    set (CMAKE_CXX_FLAGS "-O0 -ggdb3")
+endif()
+
+message (STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID}")
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    #add_compile_options (-Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic)
+    add_compile_options (-Wall -Wextra-semi -Wextra-semi-stmt -Wmissing-variable-declarations)
+    add_compile_options (-Wmissing-prototypes -Wimplicit-float-conversion)
+    add_compile_options (-Wdouble-promotion -Wimplicit-int-float-conversion -Wunused-parameter )
+    #add_compile_options (-Wshadow)
+    #add_compile_options (-Wpadded)
+    add_compile_options (-Werror=return-type)
+    add_compile_options (-ffp-contract=fast)
+else()
+    #add_compile_options (-Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic)
+    add_compile_options (-Wall -Wextra-semi -Wmissing-declarations)
+    add_compile_options (-Wfloat-conversion)
+    add_compile_options (-Wdouble-promotion -Wunused-parameter)
+    #add_compile_options (-Wpadded -Wshadow)
+    add_compile_options (-Werror=return-type)
+endif()
+
+#add_compile_options (-gsplit-dwarf)
+add_link_options($<$<CONFIG:RELEASE>:-s>)
+
+find_program (MOLD "mold")
+if (MOLD)
+    add_link_options ("-fuse-ld=mold")
+    message (STATUS "Using mold linker")
+else ()
+    find_program (LLD "lld")
+    if (LLD)
+        add_link_options ("-fuse-ld=lld")
+        message (STATUS "Using lld linker")
+    endif ()
+endif ()
+
+add_subdirectory (libui)
+
 set(PROJECT_SOURCES
         main.cpp
         MainWindow.cpp
         MainWindow.h
         MainWindow.ui
+        About.cpp About.h About.ui
+)
+set_property (SOURCE main.cpp PROPERTY COMPILE_DEFINITIONS VERSION="${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
+
+add_executable(MakedownViewer
+    ${PROJECT_SOURCES}
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(MakedownViewer
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-    )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET MakedownViewer APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-else()
-    if(ANDROID)
-        add_library(MakedownViewer SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(MakedownViewer
-            ${PROJECT_SOURCES}
-        )
-    endif()
-endif()
-
-target_link_libraries(MakedownViewer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-
-# Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
-# If you are developing for iOS or macOS you should consider setting an
-# explicit, fixed bundle identifier manually though.
-if(${QT_VERSION} VERSION_LESS 6.1.0)
-  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.MakedownViewer)
-endif()
-set_target_properties(MakedownViewer PROPERTIES
-    ${BUNDLE_ID_OPTION}
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
-)
+target_link_libraries(MakedownViewer PRIVATE
+    Qt${QT_VERSION_MAJOR}::Widgets
+    libui)
 
 include(GNUInstallDirs)
 install(TARGETS MakedownViewer
@@ -64,7 +91,3 @@ install(TARGETS MakedownViewer
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
-
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(MakedownViewer)
-endif()
