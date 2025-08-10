@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>assets/WorkSans-VariableFont_wght.ttf</file>
+        <file>assets/MarkdownViewer.png</file>
+    </qresource>
+</RCC>

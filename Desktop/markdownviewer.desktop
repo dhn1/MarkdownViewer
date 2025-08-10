@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=MarkdownViewer
+Version=1.0
+Exec=/usr/bin/MarkdownViewer
+Comment=View markdown files
+Icon=/usr/share/app-install/icons/MarkdownViewer.png
+Type=Application
+Terminal=false
+StartupNotify=false
+Categories=Office;
+MimeType=text/markdown;text/x-markdown
+

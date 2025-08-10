@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(MakedownViewer VERSION 0.0.1 LANGUAGES CXX)
+project(MarkdownViewer VERSION 0.0.1 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -77,20 +77,32 @@ set(PROJECT_SOURCES
 )
 set_property (SOURCE main.cpp PROPERTY COMPILE_DEFINITIONS VERSION="${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 
-add_executable(MakedownViewer
+add_executable(${PROJECT_NAME}
     ${PROJECT_SOURCES}
+    Resources.qrc
 )
 
-target_link_libraries(MakedownViewer PRIVATE
+target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
     libui)
 
+configure_file(leak.supp ${CMAKE_BINARY_DIR}/leak.supp COPYONLY)
+
 include(GNUInstallDirs)
-install(TARGETS MakedownViewer
-    BUNDLE DESTINATION .
+install(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+# Install desktop entry
+install (
+    FILES ${CMAKE_CURRENT_LIST_DIR}/Desktop/markdownviewer.desktop
+    DESTINATION /usr/share/applications)
+
+# Install icon
+install (
+    FILES ${CMAKE_CURRENT_LIST_DIR}/assets/MarkdownViewer.png
+    DESTINATION /usr/share/app-install/icons)
 
 
 # cpack stuff

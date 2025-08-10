@@ -55,12 +55,11 @@ void MainWindow::load (const QString& path, bool loadingRecent)
         }
         auto data = in.readAll ();
 
-        auto doc = new QTextDocument;
+        auto doc = new QTextDocument (ui->textBrowser);
 
         MarkdownImporter mi (doc, MarkdownImporter::DialectCommonMark | MarkdownImporter::FeatureTables | MarkdownImporter::FeaturePermissiveATXHeaders);
 
-        //auto font = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
-        QFontDatabase::addApplicationFont (":/Assets/WorkSans-VariableFont_wght.ttf");
+        QFontDatabase::addApplicationFont (QStringLiteral (":/Assets/WorkSans-VariableFont_wght.ttf"));
         auto font = QFont ("Work Sans", 14);
         QTextCharFormat charFmt;
         charFmt.setFont (font);
@@ -68,7 +67,7 @@ void MainWindow::load (const QString& path, bool loadingRecent)
         for (int level = 0; level < 7; level++)
         {
             auto fmt = mi.heading (level);
-            fmt.second.setForeground (QBrush (QColor ::fromRgb (0x00, 0xb0, 0xff)));
+            fmt.second.setForeground (QBrush (QColor ::fromRgb (0x00, 0xc0, 0xff)));
             mi.setHeading (level, fmt.first, fmt.second);
         }
 

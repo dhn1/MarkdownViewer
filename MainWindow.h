@@ -18,12 +18,13 @@ public:
     ~MainWindow ();
 
     void updateRecentFiles (const QString& path);
+    void load (const QString& path, bool loadingRecent);
 
 private:
     Ui::MainWindow* ui;
     QString m_file;
     QStringList m_recentFiles;
-    void load (const QString& path, bool loadingRecent);
+
     void updateRecentFiles ();
 };
 #endif  // MAINWINDOW_H
