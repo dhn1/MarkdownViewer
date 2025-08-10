@@ -53,6 +53,7 @@ void MainWindow::load (const QString& path, bool loadingRecent)
         {
             updateRecentFiles (path);
         }
+        m_file = path;
         auto data = in.readAll ();
 
         auto doc = new QTextDocument (ui->textBrowser);
@@ -67,6 +68,7 @@ void MainWindow::load (const QString& path, bool loadingRecent)
         for (int level = 0; level < 7; level++)
         {
             auto fmt = mi.heading (level);
+            fmt.second.setFontWeight (QFont::Medium);
             fmt.second.setForeground (QBrush (QColor ::fromRgb (0x00, 0xc0, 0xff)));
             mi.setHeading (level, fmt.first, fmt.second);
         }
