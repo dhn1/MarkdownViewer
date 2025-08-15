@@ -21,9 +21,9 @@ int main (int argc, char* argv[])
     MainWindow w;
     w.show ();
 
-    if (parser.positionalArguments().count() == 1)
+    if (parser.positionalArguments ().count () == 1)
     {
-        w.load (parser.positionalArguments().constFirst(), false);
+        w.load (parser.positionalArguments ().constFirst (), false);
     }
     return a.exec ();
 }

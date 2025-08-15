@@ -29,7 +29,6 @@ MainWindow::MainWindow (QWidget* parent) : QMainWindow (parent), ui (new Ui::Mai
         abt.exec ();
     });
 
-
     QSettings settings;
 
     int const count = settings.beginReadArray (QByteArrayLiteral ("recent"));
@@ -40,7 +39,6 @@ MainWindow::MainWindow (QWidget* parent) : QMainWindow (parent), ui (new Ui::Mai
     }
     settings.endArray ();
     updateRecentFiles ();
-
 }
 
 void MainWindow::load (const QString& path, bool loadingRecent)
@@ -94,7 +92,7 @@ void MainWindow::updateRecentFiles ()
             load (action->text (), false);
         });
     }
- }
+}
 
 void MainWindow::updateRecentFiles (const QString& path)
 {

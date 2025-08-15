@@ -11,10 +11,10 @@ class About : public QDialog
     Q_OBJECT
 
 public:
-    explicit About (QWidget *parent = nullptr);
+    explicit About (QWidget* parent = nullptr);
     ~About () override;
 
 private:
-    Ui::About *ui;
+    Ui::About* ui;
     QString meshCheckerVersion ();
 };
