@@ -14,7 +14,6 @@ set(CMAKE_INSTALL_RPATH "/usr/local/qt6.11.0/lib")
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
-
 find_program(CCACHE_FOUND ccache)
 if(CCACHE_FOUND)
     message (STATUS "Using ccache")
