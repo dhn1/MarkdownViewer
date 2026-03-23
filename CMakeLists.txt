@@ -105,6 +105,10 @@ install (
     FILES ${CMAKE_CURRENT_LIST_DIR}/assets/MarkdownViewer.png
     DESTINATION /usr/share/app-install/icons)
 
+# Add new mime (nethers)
+install(
+    FILES ${CMAKE_CURRENT_LIST_DIR}/Desktop/markdownviewer.xml
+    DESTINATION /usr/share/mime/packages)
 
 # cpack stuff
 include(InstallRequiredSystemLibraries)
