@@ -39,13 +39,14 @@ MainWindow::MainWindow (QWidget* parent) : QMainWindow (parent), ui (new Ui::Mai
     }
     settings.endArray ();
     updateRecentFiles ();
+    restoreGeometry (settings.value (QStringLiteral ("geo")).toByteArray ());
+    restoreState (settings.value (QStringLiteral ("state")).toByteArray ());
 }
 
 void MainWindow::load (const QString& path, bool loadingRecent)
 {
     QFile in (path);
-    in.open (QFile::ReadOnly);
-    if (in.isOpen ())
+    if (in.open (QFile::ReadOnly))
     {
         if (!loadingRecent)
         {
@@ -79,6 +80,9 @@ void MainWindow::load (const QString& path, bool loadingRecent)
 
 MainWindow::~MainWindow ()
 {
+    QSettings settings;
+    settings.setValue (QStringLiteral ("geo"), saveGeometry ());
+    settings.setValue (QStringLiteral ("state"), saveState ());
     delete ui;
 }
 

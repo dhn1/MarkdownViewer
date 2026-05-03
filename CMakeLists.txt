@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(MarkdownViewer VERSION 0.0.3 LANGUAGES CXX)
+project(MarkdownViewer VERSION 0.0.4 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
@@ -117,7 +117,7 @@ set (CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
 set (CPACK_PACKAGE_CONTACT "david_netherwood@hotmail.com")
 set (CPACK_CREATE_DESKTOP_LINKS ${PROJECT_NAME})
 set (CPACK_GENERATOR "DEB")
-set (CPACK_DEBIAN_PACKAGE_DEPENDS "libqt6gui6, libqt6core6, libqt6widgets6, qt6-qpa-plugins")
+set (CPACK_DEBIAN_PACKAGE_DEPENDS "homebrewqtcore6.11.0")
 set (CPACK_PACKAGE_FILE_NAME ${PROJECT_NAME})
 
 include(CPack)
