@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QStyleFactory>
 
 #include "MainWindow.h"
 
@@ -11,6 +12,8 @@ int main (int argc, char* argv[])
     QApplication::setOrganizationName (QStringLiteral ("Netherwood Industries"));
 
     QApplication a (argc, argv);
+    a.setStyle (QStyleFactory::create ("Fusion"));
+
     QCommandLineParser parser;
     parser.setApplicationDescription (QStringLiteral ("Viewer for markdown files (*.md)"));
     parser.addHelpOption ();

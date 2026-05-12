@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.29)
 
 project(MarkdownViewer VERSION 0.0.6 LANGUAGES CXX)
 
@@ -9,7 +9,13 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_INSTALL_RPATH "/usr/local/qt6.11.0/lib")
+file(STRINGS "/etc/os-release" RESULTS REGEX "^ID=(.*)")
+set (DISTRO "${CMAKE_MATCH_1}")
+message (STATUS "Linux distro: ${DISTRO}")
+
+if ("${DISTRO}" STREQUAL "linuxmint")
+    set(CMAKE_INSTALL_RPATH "/usr/local/qt6.11.0/lib")
+endif ()
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
@@ -67,7 +73,7 @@ else ()
     endif ()
 endif ()
 
-add_subdirectory (libui)
+add_subdirectory (libUI)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -113,16 +119,24 @@ install(
 # cpack stuff
 include(InstallRequiredSystemLibraries)
 
+if ("${DISTRO}" STREQUAL "fedora")
+    set (CPACK_GENERATOR "RPM")
+else()
+    set (CPACK_GENERATOR "DEB")
+endif ()
+
 set (CPACK_PACKAGE_NAME "${PROJECT_NAME}")
-set (CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_NAME} - Markdown viewer")
+set (CPACK_PACKAGE_FILE_NAME ${PROJECT_NAME})
+set (CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_NAME} - Markdown Viewer")
 set (CPACK_PACKAGE_VENDOR "David Netherwood")
 set (CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
 set (CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
 set (CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
 set (CPACK_PACKAGE_CONTACT "david_netherwood@hotmail.com")
-set (CPACK_CREATE_DESKTOP_LINKS ${PROJECT_NAME})
-set (CPACK_GENERATOR "DEB")
-set (CPACK_DEBIAN_PACKAGE_DEPENDS "homebrewqtcore6.11.0")
-set (CPACK_PACKAGE_FILE_NAME ${PROJECT_NAME})
 
+set (CPACK_DEBIAN_PACKAGE_DEPENDS "homebrewqtcore6.11.0")
+
+set (CPACK_RPM_PACKAGE_ARCHITECTURE "x86_64")
+set (CPACK_RPM_PACKAGE_GROUP "Applications/Text")
+set (CPACK_RPM_PACKAGE_RELEASE "3")
 include(CPack)
